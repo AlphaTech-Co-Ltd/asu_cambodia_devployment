@@ -50,6 +50,37 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserRespond GetUserById(Long id) {
+        User userFindById = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return UserRespond.converterUserMapping(userFindById);
+    }
+
+    @Override
+    public UserRespond updateUserPassword(Long id, String currentPassword, String newPassword) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Verify old password
+        if (!bCryptPasswordEncoder.matches(currentPassword, existingUser.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+
+        // Validate new password
+        if (newPassword == null || newPassword.isBlank()) {
+            throw new IllegalArgumentException("New password must not be empty");
+        }
+
+        // Save new password
+        existingUser.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        existingUser.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(existingUser);
+
+        return UserRespond.converterUserMapping(existingUser);
+    }
+
+
+    @Override
     public UserRespond createUser(UserRequest userRequest) throws IOException {
         if (!userRequest.password().equals(userRequest.confirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
@@ -85,41 +116,85 @@ public class UserService implements IUserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // Password update only if provided and confirmed
+        boolean updated = false;
+
+        // Update password only if provided
         if (userRequest.password() != null && !userRequest.password().isBlank()) {
             if (!userRequest.password().equals(userRequest.confirmPassword())) {
                 throw new IllegalArgumentException("Passwords do not match");
             }
             existingUser.setPassword(bCryptPasswordEncoder.encode(userRequest.password()));
+            updated = true;
         }
 
-        // Email uniqueness check only if changed
-        if (!existingUser.getEmail().equalsIgnoreCase(userRequest.email())
-                && userRepository.existsByEmailIgnoreCase(userRequest.email())) {
-            throw new IllegalArgumentException("Email already exists");
+        // Email update only if provided and changed
+        if (userRequest.email() != null && !userRequest.email().isBlank()
+                && !existingUser.getEmail().equalsIgnoreCase(userRequest.email())) {
+            if (userRepository.existsByEmailIgnoreCase(userRequest.email())) {
+                throw new IllegalArgumentException("Email already exists");
+            }
+            existingUser.setEmail(userRequest.email());
+            updated = true;
         }
 
-        // Username uniqueness check only if changed
-        if (!existingUser.getUsername().equalsIgnoreCase(userRequest.username())
-                && userRepository.existsByUsername(userRequest.username())) {
-            throw new IllegalArgumentException("Username already exists");
+        // Username update only if provided and changed
+        if (userRequest.username() != null && !userRequest.username().isBlank()
+                && !existingUser.getUsername().equalsIgnoreCase(userRequest.username())) {
+            if (userRepository.existsByUsername(userRequest.username())) {
+                throw new IllegalArgumentException("Username already exists");
+            }
+            existingUser.setUsername(userRequest.username());
+            updated = true;
         }
 
-        // Update other fields
-        existingUser.setFirstName(userRequest.firstName());
-        existingUser.setLastName(userRequest.lastName());
-        existingUser.setGender(userRequest.gender());
-        existingUser.setPhoneNumber(userRequest.phoneNumber());
-        existingUser.setEmail(userRequest.email());
-        existingUser.setUsername(userRequest.username());
-        existingUser.setRole(userRequest.roleUser());
-        existingUser.setUpdatedAt(LocalDateTime.now());
+        // Update image if provided
+        if (userRequest.imageUrl() != null && !userRequest.imageUrl().isEmpty()) {
+            existingUser.setImageUrl(SaveImage(userRequest.imageUrl()));
+            updated = true;
+        }
 
-        // Save updated user to DB
-        User updatedUser = userRepository.save(existingUser);
+        // First name
+        if (userRequest.firstName() != null && !userRequest.firstName().isBlank()
+                && !userRequest.firstName().equals(existingUser.getFirstName())) {
+            existingUser.setFirstName(userRequest.firstName());
+            updated = true;
+        }
 
-        return UserRespond.converterUserMapping(updatedUser);
+        // Last name
+        if (userRequest.lastName() != null && !userRequest.lastName().isBlank()
+                && !userRequest.lastName().equals(existingUser.getLastName())) {
+            existingUser.setLastName(userRequest.lastName());
+            updated = true;
+        }
+
+        // Gender
+        if (userRequest.gender() != null && !userRequest.gender().equals(existingUser.getGender())) {
+            existingUser.setGender(userRequest.gender());
+            updated = true;
+        }
+
+        // Phone number
+        if (userRequest.phoneNumber() != null && !userRequest.phoneNumber().isBlank()
+                && !userRequest.phoneNumber().equals(existingUser.getPhoneNumber())) {
+            existingUser.setPhoneNumber(userRequest.phoneNumber());
+            updated = true;
+        }
+
+        // Role
+        if (userRequest.roleUser() != null && !userRequest.roleUser().equals(existingUser.getRole())) {
+            existingUser.setRole(userRequest.roleUser());
+            updated = true;
+        }
+
+        // Save only if something changed
+        if (updated) {
+            existingUser.setUpdatedAt(LocalDateTime.now());
+            userRepository.save(existingUser);
+        }
+
+        return UserRespond.converterUserMapping(existingUser);
     }
+
 
     @Override
     public void deleteUser(Long id) throws IOException {

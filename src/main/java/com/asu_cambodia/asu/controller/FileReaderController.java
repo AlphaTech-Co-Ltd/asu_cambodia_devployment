@@ -1,7 +1,6 @@
 package com.asu_cambodia.asu.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,7 @@ import java.nio.file.Paths;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/private/files")
+@RequestMapping("/api/republic/files")
 public class FileReaderController {
 
     // Use absolute path based on current working directory + folder

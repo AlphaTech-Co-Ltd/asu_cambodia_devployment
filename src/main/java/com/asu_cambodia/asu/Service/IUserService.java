@@ -1,5 +1,6 @@
 package com.asu_cambodia.asu.Service;
 
+import com.asu_cambodia.asu.dto.UserDto.PasswordUpdateRequest;
 import com.asu_cambodia.asu.dto.UserDto.UserRequest;
 import com.asu_cambodia.asu.dto.UserDto.UserRespond;
 
@@ -9,6 +10,11 @@ import java.util.List;
 public interface IUserService{
     // method reader to get data and binding data
     List<UserRespond> ReadAllUsersData(); // get all user from db to frontend side.
+
+    // get user by id to show there profile in frontend size
+    UserRespond GetUserById(Long id);
+
+    UserRespond updateUserPassword(Long id, String currentPassword, String newPassword);
 
     // method create the user
     UserRespond createUser(UserRequest userRequest) throws IOException;
