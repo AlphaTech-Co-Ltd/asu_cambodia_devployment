@@ -1,6 +1,5 @@
 package com.asu_cambodia.asu.Service;
 
-import com.asu_cambodia.asu.dto.UserDto.PasswordUpdateRequest;
 import com.asu_cambodia.asu.dto.UserDto.UserRequest;
 import com.asu_cambodia.asu.dto.UserDto.UserRespond;
 
@@ -14,6 +13,7 @@ public interface IUserService{
     // get user by id to show there profile in frontend size
     UserRespond GetUserById(Long id);
 
+    //Update user password only if they forget password and change password
     UserRespond updateUserPassword(Long id, String currentPassword, String newPassword);
 
     // method create the user
@@ -22,5 +22,6 @@ public interface IUserService{
     // method update user account to change the data
     UserRespond updateUser(Long id, UserRequest userRequest) throws IOException;
 
+    //delete you account if user not use this account anymore
     void deleteUser(Long id) throws IOException;
 }

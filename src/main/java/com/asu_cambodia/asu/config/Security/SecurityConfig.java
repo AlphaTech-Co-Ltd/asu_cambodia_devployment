@@ -34,6 +34,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/private/users/all/userData").hasRole("SUPER_ADMIN")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
