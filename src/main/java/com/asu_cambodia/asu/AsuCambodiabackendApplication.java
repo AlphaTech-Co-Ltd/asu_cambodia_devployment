@@ -18,7 +18,6 @@ public class AsuCambodiabackendApplication {
         setIfMissing("spring.datasource.username", dotenv.get("DATASOURCE_USER", "postgres"));
         setIfMissing("spring.datasource.password", dotenv.get("DATASOURCE_PASSWORD", "password"));
         setIfMissing("jwt.secret", dotenv.get("JWT_SECRETKEY", "defaultSecretKey"));
-        setIfMissing("frontend.url", dotenv.get("FRONTEND_URL", "http://localhost:3000"));
 
         SpringApplication.run(AsuCambodiabackendApplication.class, args);
     }
