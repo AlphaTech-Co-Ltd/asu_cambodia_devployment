@@ -9,15 +9,20 @@ public class AsuCambodiabackendApplication {
 
     public static void main(String[] args) {
 
-        // Load environment variables directly from system (works on Railway and Docker)
-        System.setProperty("spring.datasource.url", System.getenv("DATASOURCE_URL"));
-        System.setProperty("spring.datasource.username", System.getenv("DATASOURCE_USER"));
-        System.setProperty("spring.datasource.password", System.getenv("DATASOURCE_PASSWORD"));
-        System.setProperty("FRONTEND_URL", System.getenv("FRONTEND_URL"));
-        System.setProperty("jwt.secret", System.getenv("JWT_SECRETKEY"));
+        String dbUrl = System.getenv("DATASOURCE_URL");
+        String dbUser = System.getenv("DATASOURCE_USER");
+        String dbPass = System.getenv("DATASOURCE_PASSWORD");
+        String frontendUrl = System.getenv("FRONTEND_URL");
+        String jwtSecret = System.getenv("JWT_SECRETKEY");
+
+        if (dbUrl != null) System.setProperty("spring.datasource.url", dbUrl);
+        if (dbUser != null) System.setProperty("spring.datasource.username", dbUser);
+        if (dbPass != null) System.setProperty("spring.datasource.password", dbPass);
+        if (frontendUrl != null) System.setProperty("FRONTEND_URL", frontendUrl);
+        if (jwtSecret != null) System.setProperty("jwt.secret", jwtSecret);
 
         SpringApplication.run(AsuCambodiabackendApplication.class, args);
     }
-
 }
+
 
