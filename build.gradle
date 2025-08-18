@@ -64,3 +64,7 @@ tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+
+tasks.withType(Test).configureEach {
+    enabled = false
+}

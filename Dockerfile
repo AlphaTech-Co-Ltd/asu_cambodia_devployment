@@ -2,6 +2,10 @@
 FROM gradle:8.5-jdk17 AS builder
 WORKDIR /app
 COPY . .
+
+# Ensure gradlew is executable
+RUN chmod +x gradlew
+
 RUN ./gradlew clean build -x test --no-daemon
 
 # Stage 2: Run
