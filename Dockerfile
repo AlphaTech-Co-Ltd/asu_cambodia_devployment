@@ -3,10 +3,11 @@ FROM gradle:8.5-jdk17 AS builder
 WORKDIR /app
 COPY . .
 
-# Ensure gradlew is executable
+# Make Gradle wrapper executable
 RUN chmod +x gradlew
 
-RUN ./gradlew clean build -x test --no-daemon
+# Build without tests and checks
+RUN ./gradlew clean bootJar -x test -x check --no-daemon
 
 # Stage 2: Run
 FROM eclipse-temurin:17-jdk
