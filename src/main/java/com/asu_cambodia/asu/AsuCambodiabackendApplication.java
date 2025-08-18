@@ -8,21 +8,27 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AsuCambodiabackendApplication {
 
     public static void main(String[] args) {
+        // Load .env file if exists (for local dev)
+        Dotenv dotenv = Dotenv.configure()
+                .ignoreIfMissing() // won't crash if .env is missing
+                .load();
 
-        String dbUrl = System.getenv("DATASOURCE_URL");
-        String dbUser = System.getenv("DATASOURCE_USER");
-        String dbPass = System.getenv("DATASOURCE_PASSWORD");
-        String frontendUrl = System.getenv("FRONTEND_URL");
-        String jwtSecret = System.getenv("JWT_SECRETKEY");
-
-        if (dbUrl != null) System.setProperty("spring.datasource.url", dbUrl);
-        if (dbUser != null) System.setProperty("spring.datasource.username", dbUser);
-        if (dbPass != null) System.setProperty("spring.datasource.password", dbPass);
-        if (frontendUrl != null) System.setProperty("FRONTEND_URL", frontendUrl);
-        if (jwtSecret != null) System.setProperty("jwt.secret", jwtSecret);
+        // Set system properties for Spring if not already set
+        setIfMissing("spring.datasource.url", dotenv.get("DATASOURCE_URL", "jdbc:postgresql://localhost:5432/asu_cambodia_Db"));
+        setIfMissing("spring.datasource.username", dotenv.get("DATASOURCE_USER", "postgres"));
+        setIfMissing("spring.datasource.password", dotenv.get("DATASOURCE_PASSWORD", "password"));
+        setIfMissing("jwt.secret", dotenv.get("JWT_SECRETKEY", "defaultSecretKey"));
+        setIfMissing("frontend.url", dotenv.get("FRONTEND_URL", "http://localhost:3000"));
 
         SpringApplication.run(AsuCambodiabackendApplication.class, args);
     }
+
+    private static void setIfMissing(String key, String value) {
+        if (System.getProperty(key) == null && System.getenv(key) == null) {
+            System.setProperty(key, value);
+        }
+    }
 }
+
 
 
