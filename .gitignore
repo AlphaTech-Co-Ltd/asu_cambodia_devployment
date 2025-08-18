@@ -40,4 +40,4 @@ out/
 
 ./upload
 
-.env
+./env

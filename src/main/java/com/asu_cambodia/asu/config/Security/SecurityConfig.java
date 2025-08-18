@@ -32,11 +32,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         return http
-                .cors()
-                .and()
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/private/users/all/userData").hasRole("SUPER_ADMIN")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
