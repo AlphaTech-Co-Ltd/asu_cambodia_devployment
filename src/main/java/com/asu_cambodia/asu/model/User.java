@@ -44,6 +44,7 @@ public class User {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private RoleUser role = RoleUser.USER;
 
     @Column(updatable = false)
