@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 
 public record UserRequest(
-    Long id,
     @NotBlank(message = "First name is required")
     String firstName,
     @NotBlank(message = "Last name is required")

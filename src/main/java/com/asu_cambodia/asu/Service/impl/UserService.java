@@ -79,7 +79,6 @@ public class UserService implements IUserService {
         return UserRespond.converterUserMapping(existingUser);
     }
 
-
     @Override
     public UserRespond createUser(UserRequest userRequest) throws IOException {
         if (!userRequest.password().equals(userRequest.confirmPassword())) {
