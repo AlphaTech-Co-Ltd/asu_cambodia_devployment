@@ -9,8 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CrossConfig {
 
-    @Value("${frontend.url}") // inject from properties/env
-    private String frontendUrl;
 
     @Bean
     public WebMvcConfigurer crossConfigConfigurer() {
@@ -18,7 +16,6 @@ public class CrossConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(frontendUrl)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
