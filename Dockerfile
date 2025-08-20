@@ -23,3 +23,4 @@ EXPOSE 8080
 
 # Pass the Railway-assigned port into Spring Boot
 ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=${PORT:-8080}"]
+
