@@ -40,13 +40,11 @@ public class StudentService implements IStudentService {
         Student student = Student.builder()
                 .firstName(studentRequest.firstName())
                 .lastName(studentRequest.lastName())
+                .imageStudentUrl(studentRequest.imageStudentUrl().toString())
+                .gender(studentRequest.gender())
                 .email(studentRequest.email())
                 .phoneNumber(studentRequest.phoneNumber())
-                .gender(studentRequest.gender())
-                .address(studentRequest.address())
-                .city(studentRequest.city())
-                .state(studentRequest.state())
-                .country(studentRequest.country())
+                .roleUser(studentRequest.role())
                 .createdDate(LocalDateTime.now())
                 .build();
         Student savedStudent = studentRepository.save(student);
