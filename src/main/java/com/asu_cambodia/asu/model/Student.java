@@ -1,6 +1,7 @@
 package com.asu_cambodia.asu.model;
 
 import com.asu_cambodia.asu.enumStirng.Gender;
+import com.asu_cambodia.asu.enumStirng.RoleUser;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,21 +22,23 @@ public class Student {
     private String firstName;
     @Column(length = 50, nullable = false)
     private String lastName;
+
+    @Column(length = 500, nullable = false)
+    private String imageStudentUrl;
+
+    @Column(length = 50, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @Column(length = 250, nullable = false)
     private String email;
     @Column(length = 15, nullable = false)
     private String phoneNumber;
+
     @Column(length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
-    private Gender gender;
-    @Column(length = 150, nullable = false)
-    private String address;
-    @Column(length = 150, nullable = false)
-    private String city;
-    @Column(length = 50, nullable = false)
-    private String state;
-    @Column(length = 50, nullable = false)
-    private String country;
+    @Builder.Default
+    private RoleUser roleUser = RoleUser.USER;
 
     @Column(updatable = false)
     private LocalDateTime createdDate;

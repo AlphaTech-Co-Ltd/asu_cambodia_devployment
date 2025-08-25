@@ -1,6 +1,7 @@
 package com.asu_cambodia.asu.dto.StudentDto;
 
 import com.asu_cambodia.asu.enumStirng.Gender;
+import com.asu_cambodia.asu.enumStirng.RoleUser;
 import com.asu_cambodia.asu.model.Student;
 
 import java.time.format.DateTimeFormatter;
@@ -9,13 +10,11 @@ public record StudentRespond(
         Long id,
         String firstName,
         String lastName,
+        String imageStudentUrl,
+        Gender gender,
         String email,
         String phoneNumber,
-        Gender gender,
-        String address,
-        String city,
-        String state,
-        String country,
+        RoleUser role,
         String createdDate,
         String updatedDate
 ) {
@@ -25,13 +24,11 @@ public record StudentRespond(
                 student.getId(),
                 student.getFirstName(),
                 student.getLastName(),
+                student.getImageStudentUrl(),
+                student.getGender(),
                 student.getEmail(),
                 student.getPhoneNumber(),
-                student.getGender(),
-                student.getAddress(),
-                student.getCity(),
-                student.getState(),
-                student.getCountry(),
+                student.getRoleUser(),
                 student.getCreatedDate() != null ? student.getCreatedDate().format(dateTimeFormatter) : null,
                 student.getUpdatedDate() != null ? student.getUpdatedDate().format(dateTimeFormatter) : null
         );
